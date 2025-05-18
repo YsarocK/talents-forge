@@ -4,5 +4,5 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   vite: { plugins: [tailwindcss(),], },
-  css: ['~/assets/styles/global.pcss'],
+  css: ['~/assets/styles/global.css'],
 })

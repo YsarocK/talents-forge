@@ -1,0 +1,14 @@
+@import "./fonts.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Antarctican Headline", sans-serif;
+
+  --color-primary-beige: #FCE7BF;
+  --color-primary-black: #0E1116;
+  --color-primary-red: #BA231C;
+}
+
+:root {
+  --main-grid-columns: 40vw 1fr 1fr 1fr 80px;
+}
