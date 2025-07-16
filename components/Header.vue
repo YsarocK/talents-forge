@@ -29,15 +29,15 @@ const links: Link[] = [
   },
   {
     label: 'Collaboration',
-    to: '/collaboration'
+    to: '#partners'
   },
   {
     label: 'À propos',
-    to: '/about'
+    to: '#about'
   },
   {
     label: 'Contact',
-    to: '/contact'
+    to: '#contact'
   }
 ]
 </script>

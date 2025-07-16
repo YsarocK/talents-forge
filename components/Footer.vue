@@ -2,8 +2,8 @@
   <footer class="flex items-center bg-primary-black border-t border-primary-beige">
     <nav class=" text-primary-beige w-full">
       <ul class="grid grid-cols-[var(--main-grid-columns)] gap-[1px] bg-primary-beige">
-        <li class="flex justify-center text-primary text-xl font-medium uppercase py-1.5 bg-primary-black">
-          <p>Contactez nous !</p>
+        <li class="flex justify-center items-center text-primary text-xl font-medium uppercase py-1.5 bg-primary-black">
+          <NuxtLink to="#contact">Contactez nous !</NuxtLink>
         </li>
         <li class="flex justify-center text-primary text-xl font-medium uppercase py-1.5 bg-primary-black" v-for="link in links" :key="link.label">
           <NavLink :to="link.to" :label="link.label" />
