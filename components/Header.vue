@@ -1,5 +1,5 @@
 <template>
-  <header class="py-3 px-20 w-screen flex justify-between items-center bg-primary-black border-b border-primary-beige">
+  <header class="py-3 px-20 flex justify-between items-center bg-primary-black border-b border-primary-beige">
     <h1 class="text-primary-beige font-bold text-2xl">Le TALENT ça se FORGE</h1>
     <na class="flex items-center gap-12">
       <ul class="flex gap-12">
@@ -21,11 +21,11 @@ type Link = {
 const links: Link[] = [
   {
     label: 'Accueil',
-    to: '/'
+    to: '#'
   },
   {
     label: 'Talents',
-    to: '/talents'
+    to: '#talents'
   },
   {
     label: 'Collaboration',
