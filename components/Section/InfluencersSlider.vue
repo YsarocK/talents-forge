@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-between">
+  <section class="flex flex-col justify-between">
     <div class="marquee-container text-primary-beige py-10">
       <div class="marquee text-2xl font-bold">
         <span v-for="i in 20" :key="i">DÉCOUVREZ NOS TALENTS -&nbsp;</span>
@@ -27,15 +27,13 @@
         <span v-for="i in 20" :key="i">DÉCOUVREZ NOS TALENTS -&nbsp;</span>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
 import Swiper from 'swiper';
 import 'swiper/css/bundle';
-import InfluencerSlide from './InfluencerSlide.vue';
 
-// Dummy slide data - you can replace this with your actual data
 const slidesData = [
   { id: 1, content: 'Slide 1', imageUrl: 'https://picsum.photos/seed/picsum1/300/400', name: 'John Doe' },
   { id: 2, content: 'Slide 2', imageUrl: 'https://picsum.photos/seed/picsum2/300/400', name: 'Jane Doe' },
@@ -60,15 +58,6 @@ onMounted(() => {
 </script>
 
 <style lang="pcss" scoped>
-.swiper-slide {
-  aspect-ratio: 9/16;
-  pointer-events: none;
-}
-
-.swiper-slide-active {
-  pointer-events: auto;
-}
-
 .marquee-container {
   overflow: hidden;
   white-space: nowrap;

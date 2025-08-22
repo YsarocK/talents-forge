@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" id="contact">
+  <section class="relative" id="contact">
     <div class=" top-0 left-0 w-full h-full grid grid-rows-2 grid-cols-[var(--main-grid-columns)] bg-[#110d0e]">
       <div class="col-span-1 row-span-2 relative overflow-hidden">
         <div class="contact-background z-0 absolute top-0 left-[-30%] w-[250%] h-[60%]"></div>
@@ -51,7 +51,7 @@
         <video src="/videos/contact/background.webm" preload="auto" autoplay muted loop class="absolute top-0 left-0 w-full h-full object-cover" />
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <style lang="pcss" scoped>

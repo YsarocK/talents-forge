@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-slide relative" @mouseenter="handleHover">
+  <div class="swiper-slide aspect-[9/16] relative" @mouseenter.once="handleHover">
     <video ref="backVideo" src="/videos/sliders/lines_back.webm" preload="auto" muted loop class="absolute top-0 left-0 w-full h-full object-cover" />
     <div class="cube-container">
       <div class="cube" :style="{ transform: `scale(${scale}) rotateY(${rotation.y}deg) rotateX(${rotation.x}deg) rotateZ(${rotation.z}deg)` }">

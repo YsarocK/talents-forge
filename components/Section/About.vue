@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-screen" id="about">
+  <section class="relative h-screen" id="about">
     <div class="absolute top-0 left-0 w-full h-full grid grid-rows-2 grid-cols-[var(--main-grid-columns)] bg-primary-beige gap-[1px]">
       <div class="col-span-2 bg-primary-black relative">
         <video src="/videos/about/03_top_left_frame.webm" preload="auto" autoplay muted loop class="absolute top-0 left-0 w-full h-full object-cover" />
@@ -27,5 +27,5 @@
       </div>
 
     </div>
-  </div>
+  </section>
 </template>
