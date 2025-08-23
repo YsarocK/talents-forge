@@ -1,5 +1,7 @@
 <template>
-  <div class="swiper-slide aspect-[9/16] relative" @mouseenter.once="handleHover">
+  <div class="relative" 
+  @mouseenter.once="handleHover"
+  >
     <video ref="backVideo" src="/videos/sliders/lines_back.webm" preload="auto" muted loop class="absolute top-0 left-0 w-full h-full object-cover" />
     <div class="cube-container">
       <div class="cube" :style="{ transform: `scale(${scale}) rotateY(${rotation.y}deg) rotateX(${rotation.x}deg) rotateZ(${rotation.z}deg)` }">
@@ -40,7 +42,7 @@ const backVideo = ref<HTMLVideoElement | null>(null);
 const frontVideo = ref<HTMLVideoElement | null>(null);
 
 const videoTimeCodes = reactive({
-  start: 3.6,
+  start: 4.2,
   end: 5.9,
 });
 
@@ -56,6 +58,7 @@ const handleHover = () => {
   scale.value = 0.5;
   rotation.y = (-1 * (360 * 1)) - 60;
   rotation.z = -2;
+
   if (backVideo.value) {
     backVideo.value.currentTime = videoTimeCodes.start;
     backVideo.value.play();
@@ -107,13 +110,8 @@ watch(() => props.isActive, (oldVal, newVal) => {
 
 <style lang="pcss">
 :root {
-  --cube-width: 200px;
+  --cube-width: 276px;
   --cube-aspect-ratio: 9/16;
-}
-
-.swiper-slide {
-  width: var(--cube-width);
-  aspect-ratio: var(--cube-aspect-ratio);
 }
 
 .cube-container {
@@ -134,7 +132,7 @@ watch(() => props.isActive, (oldVal, newVal) => {
   width: var(--cube-width);
   aspect-ratio: var(--cube-aspect-ratio);
   transform-style: preserve-3d;
-  transition: all 1s cubic-bezier(.77,0,.18,1);
+  transition: all 1s ease-in-out;
 }
 
 .cube-face {

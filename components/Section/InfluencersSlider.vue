@@ -1,32 +1,39 @@
 <template>
   <section class="flex flex-col justify-between">
-    <div class="marquee-container text-primary-beige py-10">
-      <div class="marquee text-2xl font-bold">
-        <span v-for="i in 20" :key="i">DÉCOUVREZ NOS TALENTS -&nbsp;</span>
-      </div>
-    </div>
+    <Marquee />
 
-    <div class="relative">
+    <div class="relative py-16">
       <video src="/videos/sliders/sparkles.webm" preload="auto" autoplay muted loop class="absolute top-0 left-0 w-full h-full object-cover" />
+      
+      <nav class="absolute inset-0 m-auto top-1/2 -translate-y-1/2 z-10 flex gap-82 w-fit">
+        <button
+          @click="goToPrevious"
+          class="cursor-pointer"
+          aria-label="Previous slide"
+        >
+          <video src="/videos/arrow.webm" preload="auto" autoplay muted loop class="w-20 h-20 rotate-180" />
+        </button>
+        
+        <button
+          @click="goToNext"
+          class="cursor-pointer"
+          aria-label="Next slide"
+        >
+          <video src="/videos/arrow.webm" preload="auto" autoplay muted loop class="w-20 h-20" />
+        </button>
+      </nav>
+
       <div class="swiper-container" id="influencers-slider-container">
-        <div class="swiper">
-          <div class="swiper-wrapper py-16">
-            <SectionInfluencerSlide
-              v-for="slide in slidesData"
-              :key="slide.id"
-              :is-active="swiper?.activeIndex === slidesData.findIndex(s => s.id === slide.id)"
-              :data="slide"
-            />
+        <div class="swiper !overflow-visible">
+          <div class="swiper-wrapper">
+            <SectionInfluencerSlide class="swiper-slide" v-for="slide, index in slidesData" :key="slide.id" :data="slide" :is-active="index === 0" />
           </div>
         </div>
+        
       </div>
     </div>
 
-    <div class="marquee-container text-primary-beige py-10">
-      <div class="marquee text-2xl font-bold">
-        <span v-for="i in 20" :key="i">DÉCOUVREZ NOS TALENTS -&nbsp;</span>
-      </div>
-    </div>
+    <Marquee />
   </section>
 </template>
 
@@ -44,52 +51,71 @@ const slidesData = [
   { id: 7, content: 'Slide 7', imageUrl: 'https://picsum.photos/seed/picsum7/300/400', name: 'John Doe' },
 ];
 
-
 const swiper = ref<Swiper | null>(null);
 
 onMounted(() => {
   swiper.value = new Swiper('.swiper', {
-    slidesPerView: 5.8,
     loop: true,
     spaceBetween: 100,
     centeredSlides: true,
+    speed: 600,
+    effect: 'slide',
+    watchSlidesProgress: true,
+    slidesPerView: 1.2,
+    allowTouchMove: false,
+    simulateTouch: false,
+    breakpoints: {
+      768: {
+        slidesPerView: 2.2,
+      },
+      1024: {
+        slidesPerView: 3.2,
+      },
+      1280: {
+        slidesPerView: 4.2,
+      },
+    },
   });
+
 });
+
+// Navigation methods
+const goToPrevious = () => {
+  swiper.value?.slidePrev();
+};
+
+const goToNext = () => {
+  swiper.value?.slideNext();
+};
 </script>
 
-<style lang="pcss" scoped>
-.marquee-container {
-  overflow: hidden;
-  white-space: nowrap;
-  position: relative;
-  width: 100%;
-  /* Gradient background */
-  background: linear-gradient(90deg, #301913 0%, #BF5430 100%);
-  background-size: 100% 100%;
-  animation: marquee-bg-move 30s linear infinite;
-}
-
-.marquee {
-  display: inline-flex;
-  animation: marquee 20s linear infinite;
-  white-space: nowrap;
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
+<style lang="pcss">
+#influencers-slider-container {
+  .swiper-slide {
+    aspect-ratio: 9/16 !important;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
   }
-  to {
-    transform: translateX(-50%);
-  }
-}
 
-@keyframes marquee-bg-move {
-  0% {
-    background-position: 0% 0%;
+  .swiper-slide:not(.swiper-slide-active, .swiper-slide-prev, .swiper-slide-next) {
+    transform: scale(0.8);
   }
-  100% {
-    background-position: 100% 0%;
+
+  .swiper-slide:has(+ .swiper-slide-prev) {
+    transform: scale(0.8) translateX(35px) !important;
+  }
+  
+  .swiper-slide-next ~ .swiper-slide {
+    transform: scale(0.8) translateX(-35px) !important;
+  }
+
+  .swiper-slide-prev,
+  .swiper-slide-next {
+    transform: scale(0.9);
+  }
+
+  .swiper-slide-active {
+    transform: scale(1);
   }
 }
 </style>
