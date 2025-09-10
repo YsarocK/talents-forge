@@ -24,7 +24,7 @@
       </nav>
 
       <div class="swiper-container" id="influencers-slider-container">
-        <div class="swiper !overflow-visible">
+        <div class="swiper ">
           <div class="swiper-wrapper">
             <SectionInfluencerSlide class="swiper-slide" v-for="slide, index in slidesData" :key="slide.id" :data="slide" :is-active="index === 0" />
           </div>
@@ -42,13 +42,13 @@ import Swiper from 'swiper';
 import 'swiper/css/bundle';
 
 const slidesData = [
-  { id: 1, content: 'Slide 1', imageUrl: 'https://picsum.photos/seed/picsum1/300/400', name: 'John Doe' },
-  { id: 2, content: 'Slide 2', imageUrl: 'https://picsum.photos/seed/picsum2/300/400', name: 'Jane Doe' },
-  { id: 3, content: 'Slide 3', imageUrl: 'https://picsum.photos/seed/picsum3/300/400', name: 'John Doe' },
-  { id: 4, content: 'Slide 4', imageUrl: 'https://picsum.photos/seed/picsum4/300/400', name: 'Jane Doe' },
-  { id: 5, content: 'Slide 5', imageUrl: 'https://picsum.photos/seed/picsum5/300/400', name: 'John Doe' },
-  { id: 6, content: 'Slide 6', imageUrl: 'https://picsum.photos/seed/picsum6/300/400', name: 'Jane Doe' },
-  { id: 7, content: 'Slide 7', imageUrl: 'https://picsum.photos/seed/picsum7/300/400', name: 'John Doe' },
+  { id: 1, content: 'Slide 1', imageUrl: 'https://picsum.photos/seed/picsum1/300/400', firstName: 'John', lastName: 'Doe' },
+  { id: 2, content: 'Slide 2', imageUrl: 'https://picsum.photos/seed/picsum2/300/400', firstName: 'Jane', lastName: 'Doe' },
+  { id: 3, content: 'Slide 3', imageUrl: 'https://picsum.photos/seed/picsum3/300/400', firstName: 'John', lastName: 'Doe' },
+  { id: 4, content: 'Slide 4', imageUrl: 'https://picsum.photos/seed/picsum4/300/400', firstName: 'Jane', lastName: 'Doe' },
+  { id: 5, content: 'Slide 5', imageUrl: 'https://picsum.photos/seed/picsum5/300/400', firstName: 'John', lastName: 'Doe' },
+  { id: 6, content: 'Slide 6', imageUrl: 'https://picsum.photos/seed/picsum6/300/400', firstName: 'Jane', lastName: 'Doe' },
+  { id: 7, content: 'Slide 7', imageUrl: 'https://picsum.photos/seed/picsum7/300/400', firstName: 'John', lastName: 'Doe' },
 ];
 
 const swiper = ref<Swiper | null>(null);
@@ -81,6 +81,7 @@ onMounted(() => {
 
 // Navigation methods
 const goToPrevious = () => {
+  console.log('goToPrevious', swiper.value);
   swiper.value?.slidePrev();
 };
 

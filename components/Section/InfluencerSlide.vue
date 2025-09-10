@@ -1,16 +1,24 @@
 <template>
   <div class="relative" 
-  @mouseenter.once="handleHover"
+  @mouseenter="handleHover"
   >
     <video ref="backVideo" src="/videos/sliders/lines_back.webm" preload="auto" muted loop class="absolute top-0 left-0 w-full h-full object-cover" />
     <div class="cube-container">
       <div class="cube" :style="{ transform: `scale(${scale}) rotateY(${rotation.y}deg) rotateX(${rotation.x}deg) rotateZ(${rotation.z}deg)` }">
-        <div class="cube-face front" :style="{ backgroundImage: `url(${data.imageUrl})` }"></div>
+        <div class="cube-face front">
+          <SectionInfluencerSlideFront :data="{
+            imageUrl: data.imageUrl,
+            firstName: data.firstName,
+            lastName: data.lastName
+          }" />
+        </div>
         <div aria-hidden="true" class="cube-face back"></div>
         <div class="cube-face right">
-          <p class="text-white text-center text-2xl font-bold">
-            {{ data.name }}
-          </p>
+          <SectionInfluencerSlideBack :data="{
+            firstName: data.firstName,
+            lastName: data.lastName,
+            sentence: 'mdknsqdlqskn dqns'
+          }" />
         </div>
         <div aria-hidden="true" class="cube-face left"></div>
         <div aria-hidden="true" class="cube-face top"></div>
@@ -26,7 +34,8 @@ type Props = {
   isActive: boolean;
   data: {
     imageUrl: string;
-    name: string;
+    firstName: string;
+    lastName: string;
   }
 }
 
@@ -55,6 +64,7 @@ const handleVideoTimeUpdate = (video: HTMLVideoElement) => {
 };
 
 const handleHover = () => {
+  // Step 1
   scale.value = 0.5;
   rotation.y = (-1 * (360 * 1)) - 60;
   rotation.z = -2;
@@ -70,12 +80,14 @@ const handleHover = () => {
     frontVideo.value.addEventListener('timeupdate', () => handleVideoTimeUpdate(frontVideo.value!));
   }
 
+  // Step 2
   setTimeout(() => {
     scale.value = 1;
     rotation.z = 0;
     rotation.y = (-1 * (360 * 1)) - 90;
   }, (videoDuration.value - 0.8) * 1000);
-  
+
+  // Step 3
   setTimeout(() => {
     resetVideos();
   }, videoDuration.value * 1000);
@@ -111,7 +123,7 @@ watch(() => props.isActive, (oldVal, newVal) => {
 <style lang="pcss">
 :root {
   --cube-width: 276px;
-  --cube-aspect-ratio: 9/16;
+  --cube-aspect-ratio: 9/15;
 }
 
 .cube-container {
@@ -155,7 +167,6 @@ watch(() => props.isActive, (oldVal, newVal) => {
 
 .right {
   transform: rotateY(90deg) translateZ(calc(var(--cube-width) / 2));
-  background-color: #160F1B;
 }
 
 .left {
