@@ -1,13 +1,11 @@
 <template>
   <div class="relative" 
   @mouseenter="handleHover"
-  @mouseleave="handleMouseLeave"
   >
-    <video ref="backVideo" src="/videos/sliders/lines_back.webm" preload="auto" muted loop class="z-10 absolute top-0 left-0 w-full h-full object-cover" />
-    <div class="cube-container">
-      <div class="cube" ref="cubeElement" :style="{ 
-        transform: `scale(${scale}) rotateY(${rotation.y}deg) rotateX(${rotation.x}deg) rotateZ(${rotation.z}deg)` 
-      }">
+  <div class="cube-container">
+    <div class="cube" ref="cubeElement" :style="{ 
+      transform: `scale(${scale}) rotateY(${rotation.y}deg) rotateX(${rotation.x}deg) rotateZ(${rotation.z}deg)` 
+    }">
         <div class="cube-face front">
           <SectionInfluencerSlideFront :data="{
             imageUrl: data.imageUrl,
@@ -28,7 +26,8 @@
         <div aria-hidden="true" class="cube-face bottom"></div>
       </div>
     </div>
-    <video ref="frontVideo" src="/videos/sliders/lines_front.webm" preload="auto" muted loop class="absolute top-0 left-0 w-full h-full object-cover" />
+     <video ref="backVideo" src="/videos/sliders/lines_back.webm" preload="auto" muted loop class="pointer-events-none absolute z-[-1] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style="width: 400%; height: auto; object-fit: contain; transform-origin: center center;" />
+     <video ref="frontVideo" src="/videos/sliders/lines_front.webm" preload="auto" muted loop class="pointer-events-none absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style="width: 400%; height: auto; object-fit: contain; transform-origin: center center;" />
   </div>
 </template>
 
@@ -60,21 +59,40 @@ const rotation = reactive({
 const isAnimating = ref(false);
 const pendingAction = ref<'leave' | null>(null);
 
-const videoTimeCodes = reactive({
-  start: 4.1,
-  end: 6.1,
-});
-
-const videoDuration = computed(() => { return videoTimeCodes.end - videoTimeCodes.start; })
+const videoDuration = ref(2.5); // Duration in seconds for animations
 
 const startVideos = () => {
-  if (backVideo.value) {
-    backVideo.value.currentTime = videoTimeCodes.start;
-    backVideo.value.play();
-  }
+  // Start both videos at 1/8 of the animation
+  const videoDelay = videoDuration.value / 8;
+  
+  setTimeout(() => {
+    if (frontVideo.value) {
+      frontVideo.value.currentTime = 0;
+      frontVideo.value.play();
+    }
+    if (backVideo.value) {
+      backVideo.value.currentTime = 0;
+      backVideo.value.play();
+    }
+  }, videoDelay * 1000);
+};
+
+const animateVideosScale = (targetScale: number, duration: number, delay: number = 0) => {
   if (frontVideo.value) {
-    frontVideo.value.currentTime = videoTimeCodes.start;
-    frontVideo.value.play();
+    gsap.to(frontVideo.value, {
+      scale: targetScale,
+      duration: duration,
+      delay: delay,
+      ease: "power2.out"
+    });
+  }
+  if (backVideo.value) {
+    gsap.to(backVideo.value, {
+      scale: targetScale,
+      duration: duration,
+      delay: delay,
+      ease: "power2.out"
+    });
   }
 };
 
@@ -103,12 +121,16 @@ const handleHover = () => {
 
   // Step 1: Scale down and rotate to first position
   tl.to(scale, {
-    value: 0.5,
+    value: 0.4,
     duration: videoDuration.value / 2,
     ease: "power2.out"
   })
+  // Animate videos scale to follow cube
+  .call(() => {
+    animateVideosScale(0.5, videoDuration.value / 2);
+  }, [], 0)
   .to(rotation, {
-    y: (-1 * (360 * 1)) - 60,
+    y: (-1 * (360 * 2)) - 60, // 2 full rotations
     z: -2,
     duration: videoDuration.value / 2,
     ease: "power2.out"
@@ -117,14 +139,18 @@ const handleHover = () => {
   .to(scale, {
     value: 1,
     duration: videoDuration.value / 2,
-    ease: "power2.inOut"
+    ease: "power2.out"
   }, videoDuration.value / 2 - 0.2)
   .to(rotation, {
     z: 0,
-    y: (-1 * (360 * 1)) - 90,
+    y: (-1 * (360 * 2)) - 90, // 2 full rotations
     duration: videoDuration.value / 2,
-    ease: "power2.inOut"
-  }, videoDuration.value / 2 - 0.2);
+    ease: "power2.out"
+  }, videoDuration.value / 2 - 0.2)
+  // Animate videos scale back up
+  .call(() => {
+    animateVideosScale(1, videoDuration.value / 2);
+  }, [], videoDuration.value / 2 - 0.2);
 };
 
 const handleMouseLeave = () => {
@@ -139,9 +165,6 @@ const handleMouseLeave = () => {
   // Kill any ongoing animations
   gsap.killTweensOf(scale);
   gsap.killTweensOf(rotation);
-  
-  // Start videos for reverse animation
-  startVideos();
   
   // Create reverse animation timeline
   const tl = gsap.timeline({
@@ -159,16 +182,20 @@ const handleMouseLeave = () => {
 
   // Step 1: Scale down and rotate back to first position
   tl.to(scale, {
-    value: 0.5,
+    value: 0.3,
     duration: videoDuration.value / 2,
-    ease: "power2.out"
+    ease: "power2.inOut"
   })
   .to(rotation, {
-    y: (-1 * (360 * 1)) - 60,
+    y: (-1 * (360 * 2)) - 60, // 2 full rotations
     z: -2,
     duration: videoDuration.value / 2,
-    ease: "power2.out"
+    ease: "power2.inOut"
   }, 0) // Start at the same time as scale
+  // Animate videos scale to follow cube
+  .call(() => {
+    animateVideosScale(0.3, videoDuration.value / 2);
+  }, [], 0)
   // Step 2: Scale back up and rotate to initial position
   .to(scale, {
     value: 1,
@@ -180,7 +207,11 @@ const handleMouseLeave = () => {
     y: 0,
     duration: videoDuration.value / 2,
     ease: "power2.inOut"
-  }, videoDuration.value / 2 - 0.2);
+  }, videoDuration.value / 2 - 0.2)
+  // Animate videos scale back up
+  .call(() => {
+    animateVideosScale(1, videoDuration.value / 2);
+  }, [], videoDuration.value / 2 - 0.2);
 };
 
 const resetPosition = () => {
@@ -198,13 +229,13 @@ const resetPosition = () => {
 }
 
 const resetVideos = () => {
-  if (backVideo.value) {
-    backVideo.value.pause();
-    backVideo.value.currentTime = videoTimeCodes.start;
-  }
   if (frontVideo.value) {
     frontVideo.value.pause();
-    frontVideo.value.currentTime = videoTimeCodes.start;
+    frontVideo.value.currentTime = 0;
+  }
+  if (backVideo.value) {
+    backVideo.value.pause();
+    backVideo.value.currentTime = 0;
   }
 }
 
@@ -239,6 +270,9 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate(-50%, -50%) translateZ(0);
 }
 
 .cube {
@@ -246,6 +280,9 @@ onUnmounted(() => {
   width: var(--cube-width);
   aspect-ratio: var(--cube-aspect-ratio);
   transform-style: preserve-3d;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .cube-face {
@@ -255,6 +292,8 @@ onUnmounted(() => {
   background-size: cover;
   background-position: center;
   backface-visibility: hidden;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .front {
@@ -283,5 +322,13 @@ onUnmounted(() => {
 .bottom {
   transform: rotateX(-90deg) translateZ(calc(var(--cube-height) / 2));
   background-color: #160F1B;
+}
+
+video {
+  max-width: unset;
+  will-change: transform, scale;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  contain: layout style paint;
 }
 </style> 
