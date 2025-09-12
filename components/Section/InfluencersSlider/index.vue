@@ -3,7 +3,7 @@
     <Marquee />
 
     <div class="relative py-16">
-      <video src="/videos/sliders/sparkles.webm" preload="auto" autoplay muted loop class="absolute top-0 left-0 w-full h-full object-cover" />
+      <video src="/videos/sliders/sparkles.webm" preload="auto" autoplay muted playsinline loop class="absolute top-0 left-0 w-full h-full object-cover" />
       
       <nav class="absolute inset-0 m-auto top-1/2 -translate-y-1/2 z-10 flex gap-82 w-fit">
         <button
@@ -11,7 +11,7 @@
           class="cursor-pointer"
           aria-label="Previous slide"
         >
-          <video src="/videos/arrow.webm" preload="auto" autoplay muted loop class="w-20 h-20 rotate-180" />
+          <video src="/videos/arrow.webm" preload="auto" autoplay muted playsinline loop class="w-20 h-20 rotate-180" />
         </button>
         
         <button
@@ -19,7 +19,7 @@
           class="cursor-pointer"
           aria-label="Next slide"
         >
-          <video src="/videos/arrow.webm" preload="auto" autoplay muted loop class="w-20 h-20" />
+          <video src="/videos/arrow.webm" preload="auto" autoplay muted playsinline loop class="w-20 h-20" />
         </button>
       </nav>
 

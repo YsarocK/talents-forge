@@ -1,6 +1,6 @@
 <template>
   <section class="relative" id="contact">
-    <div class=" top-0 left-0 w-full h-full grid grid-rows-2 grid-cols-[var(--main-grid-columns)] bg-[#110d0e]">
+    <div class="top-0 left-0 w-full h-full grid auto-rows-fr md:grid-rows-2 grid-cols-1 md:grid-cols-[var(--main-grid-columns)] bg-[#110d0e]">
       <div class="col-span-1 row-span-2 relative overflow-hidden">
         <div class="contact-background z-0 absolute top-0 left-[-30%] w-[250%] h-[60%]"></div>
         <div class="relative px-10 py-6 top-0 left-0 w-full flex flex-col gap-8">
@@ -8,21 +8,21 @@
           <p class="text-primary-beige text-5xl font-bold uppercase">Contactez nous <span class="text-primary-red">aujourd'hui</span></p>
           <ul class="max-w-[80%] flex flex-col gap-8">
             <li class="flex items-center pb-2 text-primary-beige border-b border-primary-beige/20">
-               <video src="/videos/contact/flamme.webm" preload="auto" autoplay muted loop class="w-20 z-[10]" />
+               <video src="/videos/contact/flamme.webm" preload="auto" autoplay muted playsinline loop class="w-20 z-[10]" />
               <div class="flex flex-col gap-0.5 -ml-5">
                 <p class="text-xl font-bold">Adresse :</p>
                 <p class="font-poppins text-xs">13 Rue de rochefort, Bât A2, Appt 18</p>
               </div>
             </li>
             <li class="flex items-center pb-2 text-primary-beige border-b border-primary-beige/20">
-               <video src="/videos/contact/flamme.webm" preload="auto" autoplay muted loop class="w-20 z-[10]" />
+               <video src="/videos/contact/flamme.webm" preload="auto" autoplay muted playsinline loop class="w-20 z-[10]" />
               <div class="flex flex-col gap-0.5 -ml-5">
                 <p class="text-xl font-bold">Email :</p>
                 <p class="font-poppins text-xs">contact@tofill.com</p>
               </div>
             </li>
             <li class="flex items-center pb-2 text-primary-beige border-b border-primary-beige/20">
-               <video src="/videos/contact/flamme.webm" preload="auto" autoplay muted loop class="w-20 z-[10]" />
+               <video src="/videos/contact/flamme.webm" preload="auto" autoplay muted playsinline loop class="w-20 z-[10]" />
               <div class="flex flex-col gap-0.5 -ml-5">
                 <p class="text-xl font-bold">Téléphone :</p>
                 <p class="font-poppins text-xs">+33 0 00 00 00 00</p>
@@ -31,7 +31,7 @@
           </ul>
           <div class="flex flex-col gap-2 text-primary-beige">
             <div class="flex items-center pb-2  ">
-              <video src="/videos/contact/flamme.webm" preload="auto" autoplay muted loop class="w-20 z-[10]" />
+              <video src="/videos/contact/flamme.webm" preload="auto" autoplay muted playsinline loop class="w-20 z-[10]" />
               <div class="flex flex-col gap-0.5 -ml-5">
                 <p class="text-xl font-bold">Écrivez-nous :</p>
               </div>
@@ -48,7 +48,7 @@
         </div>
       </div>
       <div class="col-span-4 row-span-2 bg-primary-black relative">
-        <video src="/videos/contact/background.webm" preload="auto" autoplay muted loop class="absolute top-0 left-0 w-full h-full object-cover" />
+        <video src="/videos/contact/background.webm" preload="auto" autoplay muted playsinline loop class="absolute top-0 left-0 w-full h-full object-cover" />
       </div>
     </div>
   </section>

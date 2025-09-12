@@ -1,7 +1,7 @@
 <template>
   <footer class="flex items-center bg-primary-black border-t border-primary-beige">
     <nav class=" text-primary-beige w-full">
-      <ul class="grid grid-cols-[var(--main-grid-columns)] gap-[1px] bg-primary-beige">
+      <ul class="grid grid-cols-1 md:grid-cols-[var(--main-grid-columns)] gap-[1px] bg-primary-beige">
         <li class="flex justify-center items-center text-primary text-xl font-medium uppercase py-1.5 bg-primary-black">
           <NuxtLink to="#contact">Contactez nous !</NuxtLink>
         </li>

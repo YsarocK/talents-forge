@@ -1,6 +1,6 @@
 <template>
   <section class="h-screen relative" id="partners">
-    <video src="/videos/partners/background.webm" preload="auto" autoplay muted class="absolute top-0 left-0 w-full h-full object-cover" />
+    <video src="/videos/partners/background.webm" preload="auto" autoplay muted playsinline class="absolute top-0 left-0 w-full h-full object-cover" />
     <!-- <div class="absolute left-0 right-0 bottom-10 flex items-center justify-center h-96">
       <swiper
         :modules="[Autoplay]"
