@@ -63,7 +63,7 @@ const videoDuration = ref(2.5); // Duration in seconds for animations
 
 const startVideos = () => {
   // Start both videos at 1/8 of the animation
-  const videoDelay = videoDuration.value / 8;
+  const videoDelay = videoDuration.value / 6;
   
   setTimeout(() => {
     if (frontVideo.value) {
@@ -131,7 +131,7 @@ const handleHover = () => {
   }, [], 0)
   .to(rotation, {
     y: (-1 * (360 * 2)) - 60, // 2 full rotations
-    z: -2,
+    z: -10,
     duration: videoDuration.value / 2,
     ease: "power2.out"
   }, 0) // Start at the same time as scale
