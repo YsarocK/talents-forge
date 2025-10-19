@@ -1,25 +1,18 @@
 <template>
   <div class="relative" 
-  @mouseenter="handleHover"
   >
-  <div class="cube-container">
+  <div class="cube-container" 
+  @mouseenter="handleHover"
+  @mouseleave="handleMouseLeave">
     <div class="cube" ref="cubeElement" :style="{ 
       transform: `scale(${scale}) rotateY(${rotation.y}deg) rotateX(${rotation.x}deg) rotateZ(${rotation.z}deg)` 
     }">
         <div class="cube-face front">
-          <SectionInfluencerSlideFront :data="{
-            imageUrl: data.imageUrl,
-            firstName: data.firstName,
-            lastName: data.lastName
-          }" />
+          <SectionInfluencersSliderItemFront :data="data" />
         </div>
         <div aria-hidden="true" class="cube-face back"></div>
         <div class="cube-face right">
-          <SectionInfluencerSlideBack :data="{
-            firstName: data.firstName,
-            lastName: data.lastName,
-            sentence: 'mdknsqdlqskn dqns'
-          }" />
+          <SectionInfluencersSliderItemBack :data="data" />
         </div>
         <div aria-hidden="true" class="cube-face left"></div>
         <div aria-hidden="true" class="cube-face top"></div>
@@ -33,14 +26,11 @@
 
 <script setup lang="ts">
 import { gsap } from 'gsap';
+import type { Slide } from '../data';
 
 type Props = {
+  data: Slide;
   isActive: boolean;
-  data: {
-    imageUrl: string;
-    firstName: string;
-    lastName: string;
-  }
 }
 
 const props = defineProps<Props>();
@@ -48,6 +38,8 @@ const props = defineProps<Props>();
 const backVideo = ref<HTMLVideoElement | null>(null);
 const frontVideo = ref<HTMLVideoElement | null>(null);
 const cubeElement = ref<HTMLElement | null>(null);
+
+const state = ref<'initial' | 'hovered'>('initial');
 
 const scale = ref(1);
 const rotation = reactive({
@@ -97,6 +89,9 @@ const animateVideosScale = (targetScale: number, duration: number, delay: number
 };
 
 const handleHover = () => {
+  console.log('handleHover');
+  if (!props.isActive) return;
+
   // Prevent multiple animations
   if (isAnimating.value) return;
   
@@ -151,10 +146,13 @@ const handleHover = () => {
   .call(() => {
     animateVideosScale(1, videoDuration.value / 2);
   }, [], videoDuration.value / 2 - 0.2);
+
+  state.value = 'hovered';
 };
 
 const handleMouseLeave = () => {
-  // If we're already animating, queue the leave action
+  if (!props.isActive && state.value === 'initial') return;
+
   if (isAnimating.value) {
     pendingAction.value = 'leave';
     return;
@@ -166,7 +164,10 @@ const handleMouseLeave = () => {
   gsap.killTweensOf(scale);
   gsap.killTweensOf(rotation);
   
-  // Create reverse animation timeline
+  // Start videos immediately (same as hover)
+  startVideos();
+  
+  // Create reverse animation timeline with same parameters as hover
   const tl = gsap.timeline({
     onComplete: () => {
       resetVideos();
@@ -180,53 +181,41 @@ const handleMouseLeave = () => {
     }
   });
 
-  // Step 1: Scale down and rotate back to first position
+  // Step 1: Scale down and rotate back (reverse of hover animation)
   tl.to(scale, {
-    value: 0.3,
+    value: 0.4, // Same as hover
     duration: videoDuration.value / 2,
-    ease: "power2.inOut"
+    ease: "power2.out" // Same easing as hover
   })
-  .to(rotation, {
-    y: (-1 * (360 * 2)) - 60, // 2 full rotations
-    z: -2,
-    duration: videoDuration.value / 2,
-    ease: "power2.inOut"
-  }, 0) // Start at the same time as scale
   // Animate videos scale to follow cube
   .call(() => {
-    animateVideosScale(0.3, videoDuration.value / 2);
+    animateVideosScale(0.5, videoDuration.value / 2);
   }, [], 0)
-  // Step 2: Scale back up and rotate to initial position
+  .to(rotation, {
+    y: (-1 * (360 * 2)) - 60, // 2 full rotations in reverse direction
+    z: -10, // Opposite of hover
+    duration: videoDuration.value / 2,
+    ease: "power2.out" // Same easing as hover
+  }, 0) // Start at the same time as scale
+  // Step 2: Scale back to normal and rotate to initial position (0, 0)
   .to(scale, {
     value: 1,
     duration: videoDuration.value / 2,
-    ease: "power2.inOut"
+    ease: "power2.out" // Same easing as hover
   }, videoDuration.value / 2 - 0.2)
   .to(rotation, {
     z: 0,
-    y: 0,
+    y: 0, // Back to initial position
     duration: videoDuration.value / 2,
-    ease: "power2.inOut"
+    ease: "power2.out" // Same easing as hover
   }, videoDuration.value / 2 - 0.2)
   // Animate videos scale back up
   .call(() => {
     animateVideosScale(1, videoDuration.value / 2);
   }, [], videoDuration.value / 2 - 0.2);
-};
 
-const resetPosition = () => {
-  gsap.to(scale, {
-    value: 1,
-    duration: videoDuration.value,
-    ease: "power2.out"
-  });
-  gsap.to(rotation, {
-    y: 0,
-    z: 0,
-    duration: videoDuration.value,
-    ease: "power2.out"
-  });
-}
+  state.value = 'initial';
+};
 
 const resetVideos = () => {
   if (frontVideo.value) {
@@ -239,10 +228,11 @@ const resetVideos = () => {
   }
 }
 
-watch(() => props.isActive, (oldVal, newVal) => {
+watch(() => props.isActive, (newVal, oldVal) => {
   if(oldVal && !newVal) {
-    resetPosition();
-    resetVideos();
+    handleMouseLeave();
+  } else if(!oldVal && newVal) {
+    handleHover();
   }
 });
 

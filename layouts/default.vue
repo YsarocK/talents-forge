@@ -19,3 +19,12 @@ main {
   }
 }
 </style>
+
+<script setup lang="ts">
+useHead({
+  title: 'Talent\'s Forge',
+  meta: [
+    { name: 'description', content: 'Le Talent ça se Forge' }
+  ]
+})
+</script>

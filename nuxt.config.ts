@@ -5,4 +5,9 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   vite: { plugins: [tailwindcss(),], },
   css: ['~/assets/styles/global.css'],
+  runtimeConfig: {
+    public: {
+      formEndpoint: process.env.FORM_ENDPOINT,
+    },
+  },
 })

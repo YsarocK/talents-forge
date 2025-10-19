@@ -36,13 +36,16 @@
                 <p class="text-xl font-bold">Écrivez-nous :</p>
               </div>
             </div>
-            <form class="grid grid-cols-2 border text-lg border-primary-beige/20 rounded-2xl">
-              <input type="text" placeholder="Nom :" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20 border-r">
-              <input type="text" placeholder="Prénom :" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20">
-              <input type="email" placeholder="Email :" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20 border-r">
-              <input type="tel" placeholder="Téléphone :" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20">
-              <input type="text" placeholder="Objet :" class="outline-none px-3 py-1 bg-transparent col-span-2 border-b border-primary-beige/20">
-              <textarea placeholder="Message :" class="outline-none col-span-2 px-3 py-1 bg-transparent"></textarea>
+            <form name="contact-form" @submit.prevent="handleSubmit" class="flex flex-col gap-2">
+              <div class="grid grid-cols-2 border text-lg border-primary-beige/20 rounded-2xl">
+                <input type="text" name="last_name" required placeholder="Nom :" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20 border-r">
+                <input type="text" name="first_name" required placeholder="Prénom :" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20">
+                <input type="email" name="email" required placeholder="Email :" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20 border-r">
+                <input type="tel" name="phone" required placeholder="Téléphone :" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20">
+                <input type="text" name="object" required placeholder="Objet :" class="outline-none px-3 py-1 bg-transparent col-span-2 border-b border-primary-beige/20">
+                <textarea name="message" required placeholder="Message :" class="outline-none col-span-2 px-3 py-1 bg-transparent"></textarea>
+              </div>
+              <button type="submit" class="col-span-2 w-fit px-10 py-1 bg-primary-red text-primary-beige rounded-2xl">Envoyer</button>
             </form>
           </div>
         </div>
@@ -53,6 +56,27 @@
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+const { formEndpoint } = useRuntimeConfig().public;
+
+const handleSubmit = async (event: Event) => {
+  const form = event.target as HTMLFormElement;
+  const formData = new FormData(form);
+  const formDataObject = Object.fromEntries(formData.entries());
+
+  const response = await fetch(formEndpoint, {
+    method: 'POST',
+    body: JSON.stringify(formDataObject),
+  });
+
+  if (response.ok) {
+    console.log('Form submitted successfully');
+  } else {
+    console.error('Failed to submit form');
+  }
+}
+</script>
 
 <style lang="pcss" scoped>
 .contact-background {

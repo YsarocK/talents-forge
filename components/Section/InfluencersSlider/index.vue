@@ -1,5 +1,5 @@
 <template>
-  <section class="flex flex-col justify-between">
+  <section class="flex flex-col justify-between" id="talents">
     <Marquee />
 
     <div class="relative py-16">
@@ -24,9 +24,9 @@
       </nav>
 
       <div class="swiper-container" id="influencers-slider-container">
-        <div class="swiper ">
+        <div class="swiper influencers-swiper">
           <div class="swiper-wrapper">
-            <SectionInfluencerSlide class="swiper-slide" v-for="slide, index in slidesData" :key="slide.id" :data="slide" :is-active="index === 0" />
+            <SectionInfluencersSliderItem class="swiper-slide" v-for="(slide, index) in slidesData" :key="slide.id" :data="slide" :is-active="activeSlideIndex === index"/>
           </div>
         </div>
         
@@ -40,21 +40,13 @@
 <script setup lang="ts">
 import Swiper from 'swiper';
 import 'swiper/css/bundle';
-
-const slidesData = [
-  { id: 1, content: 'Slide 1', imageUrl: 'https://picsum.photos/seed/picsum1/300/400', firstName: 'John', lastName: 'Doe' },
-  { id: 2, content: 'Slide 2', imageUrl: 'https://picsum.photos/seed/picsum2/300/400', firstName: 'Jane', lastName: 'Doe' },
-  { id: 3, content: 'Slide 3', imageUrl: 'https://picsum.photos/seed/picsum3/300/400', firstName: 'John', lastName: 'Doe' },
-  { id: 4, content: 'Slide 4', imageUrl: 'https://picsum.photos/seed/picsum4/300/400', firstName: 'Jane', lastName: 'Doe' },
-  { id: 5, content: 'Slide 5', imageUrl: 'https://picsum.photos/seed/picsum5/300/400', firstName: 'John', lastName: 'Doe' },
-  { id: 6, content: 'Slide 6', imageUrl: 'https://picsum.photos/seed/picsum6/300/400', firstName: 'Jane', lastName: 'Doe' },
-  { id: 7, content: 'Slide 7', imageUrl: 'https://picsum.photos/seed/picsum7/300/400', firstName: 'John', lastName: 'Doe' },
-];
+import { slidesData } from './data';
 
 const swiper = ref<Swiper | null>(null);
+const activeSlideIndex = ref(0);
 
 onMounted(() => {
-  swiper.value = new Swiper('.swiper', {
+  swiper.value = new Swiper('.influencers-swiper', {
     loop: true,
     spaceBetween: 100,
     centeredSlides: true,
@@ -66,23 +58,31 @@ onMounted(() => {
     simulateTouch: false,
     breakpoints: {
       768: {
-        slidesPerView: 2.2,
+        slidesPerView: 1.2,
       },
       1024: {
-        slidesPerView: 3.2,
+        slidesPerView: 2.2,
       },
       1280: {
-        slidesPerView: 4.2,
+        slidesPerView: 3.2,
+      },
+    },
+    on: {
+      slideChange: (swiper) => {
+        activeSlideIndex.value = swiper.realIndex;
       },
     },
   });
 
+  // Initialize the active slide index
+  if (swiper.value) {
+    activeSlideIndex.value = swiper.value.realIndex;
+  }
 });
 
 // Navigation methods
 const goToPrevious = () => {
-  console.log('goToPrevious', swiper.value);
-  swiper.value?.slidePrev();
+    swiper.value?.slidePrev();
 };
 
 const goToNext = () => {
@@ -92,8 +92,12 @@ const goToNext = () => {
 
 <style lang="pcss">
 #influencers-slider-container {
+  .influencers-swiper {
+    padding: 20px 0;
+  }
+
   .swiper-slide {
-    aspect-ratio: 9/16 !important;
+    aspect-ratio: 9/15 !important;
     transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     will-change: transform;
   }

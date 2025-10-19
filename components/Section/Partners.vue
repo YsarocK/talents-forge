@@ -1,7 +1,7 @@
 <template>
   <section class="h-screen relative" id="partners">
     <video src="/videos/partners/background.webm" preload="auto" autoplay muted playsinline class="absolute top-0 left-0 w-full h-full object-cover" />
-    <!-- <div class="absolute left-0 right-0 bottom-10 flex items-center justify-center h-96">
+    <div class="absolute left-0 right-0 bottom-20 flex items-center justify-center">
       <swiper
         :modules="[Autoplay]"
         :slides-per-view="2"
@@ -9,7 +9,7 @@
         :centered-slides="true"
         :loop="true"
         :autoplay="{
-          delay: 3000,
+          delay: 1500,
           disableOnInteraction: false,
         }"
         :breakpoints="{
@@ -22,7 +22,7 @@
             spaceBetween: 50
           }
         }"
-        class="w-full"
+        class="w-full partners-swiper"
       >
         <swiper-slide v-for="i in 6" :key="i">
           <div class="flex items-center justify-center h-full">
@@ -34,7 +34,7 @@
           </div>
         </swiper-slide>
       </swiper>
-    </div> -->
+    </div>
   </section>
 </template>
 
@@ -45,11 +45,11 @@ import 'swiper/css'
 </script>
 
 <style scoped>
-.swiper {
+.partners-swiper {
   padding: 20px 0;
 }
 
-.swiper-slide {
+.partners-swiper .swiper-slide {
   text-align: center;
   font-size: 18px;
   background: transparent;

@@ -1,6 +1,6 @@
 <template>
   <SectionHero />
-  <SectionInfluencersSlider id="talents" />
+  <SectionInfluencersSlider />
   <SectionPartners />
   <SectionAbout />
   <SectionContact />
