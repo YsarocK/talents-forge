@@ -1,11 +1,9 @@
 <template>
   <div class="relative" 
   >
-  <div class="cube-container" 
-  @mouseenter="handleHover"
-  @mouseleave="handleMouseLeave">
-    <div class="cube" ref="cubeElement" :style="{ 
-      transform: `scale(${scale}) rotateY(${rotation.y}deg) rotateX(${rotation.x}deg) rotateZ(${rotation.z}deg)` 
+  <div class="cube-container">
+    <div class="cube" ref="cubeElement" :style="{
+      transform: `translate3d(0, 0, 0) scale3d(${transformValues.scale}, ${transformValues.scale}, ${transformValues.scale}) rotateX(${transformValues.rotationX}deg) rotateY(${transformValues.rotationY}deg) rotateZ(${transformValues.rotationZ}deg)`
     }">
         <div class="cube-face front">
           <SectionInfluencersSliderItemFront :data="data" />
@@ -41,15 +39,18 @@ const cubeElement = ref<HTMLElement | null>(null);
 
 const state = ref<'initial' | 'hovered'>('initial');
 
-const scale = ref(1);
-const rotation = reactive({
-  y: 0,
-  x: 0,
-  z: 0,
-});
-
 const isAnimating = ref(false);
 const pendingAction = ref<'leave' | null>(null);
+const isSectionVisible = ref(false);
+const hasAnimatedOnce = ref(false);
+
+// Store transform values for manual transform construction
+const transformValues = reactive({
+  scale: 1,
+  rotationX: 0,
+  rotationY: 0,
+  rotationZ: 0,
+});
 
 const videoDuration = ref(2.5); // Duration in seconds for animations
 
@@ -75,7 +76,8 @@ const animateVideosScale = (targetScale: number, duration: number, delay: number
       scale: targetScale,
       duration: duration,
       delay: delay,
-      ease: "power2.out"
+      ease: "power2.out",
+      force3D: true // Force GPU acceleration with matrix3d
     });
   }
   if (backVideo.value) {
@@ -83,15 +85,18 @@ const animateVideosScale = (targetScale: number, duration: number, delay: number
       scale: targetScale,
       duration: duration,
       delay: delay,
-      ease: "power2.out"
+      ease: "power2.out",
+      force3D: true // Force GPU acceleration with matrix3d
     });
   }
 };
 
-const handleHover = () => {
-  console.log('handleHover');
-  if (!props.isActive) return;
-
+const activateAnimation = () => {
+  // For the first animation, only trigger if section is visible
+  if (!hasAnimatedOnce.value && !isSectionVisible.value) {
+    return;
+  }
+  
   // Prevent multiple animations
   if (isAnimating.value) return;
   
@@ -109,36 +114,29 @@ const handleHover = () => {
       // Check if there's a pending action to execute
       if (pendingAction.value === 'leave') {
         pendingAction.value = null;
-        handleMouseLeave();
+        deactivateAnimation();
       }
     }
   });
 
   // Step 1: Scale down and rotate to first position
-  tl.to(scale, {
-    value: 0.4,
+  // Animate transform values - GSAP will optimize with matrix3d via translate3d/scale3d
+  tl.to(transformValues, {
+    scale: 0.4,
+    rotationY: (-1 * (360 * 2)) - 60, // 2 full rotations
+    rotationZ: -10,
     duration: videoDuration.value / 2,
     ease: "power2.out"
-  })
+  }, 0)
   // Animate videos scale to follow cube
   .call(() => {
     animateVideosScale(0.5, videoDuration.value / 2);
   }, [], 0)
-  .to(rotation, {
-    y: (-1 * (360 * 2)) - 60, // 2 full rotations
-    z: -10,
-    duration: videoDuration.value / 2,
-    ease: "power2.out"
-  }, 0) // Start at the same time as scale
   // Step 2: Scale back up and rotate to final position
-  .to(scale, {
-    value: 1,
-    duration: videoDuration.value / 2,
-    ease: "power2.out"
-  }, videoDuration.value / 2 - 0.2)
-  .to(rotation, {
-    z: 0,
-    y: (-1 * (360 * 2)) - 90, // 2 full rotations
+  .to(transformValues, {
+    scale: 1,
+    rotationZ: 0,
+    rotationY: (-1 * (360 * 2)) - 90, // 2 full rotations
     duration: videoDuration.value / 2,
     ease: "power2.out"
   }, videoDuration.value / 2 - 0.2)
@@ -148,10 +146,11 @@ const handleHover = () => {
   }, [], videoDuration.value / 2 - 0.2);
 
   state.value = 'hovered';
+  hasAnimatedOnce.value = true;
 };
 
-const handleMouseLeave = () => {
-  if (!props.isActive && state.value === 'initial') return;
+const deactivateAnimation = () => {
+  if (state.value === 'initial') return;
 
   if (isAnimating.value) {
     pendingAction.value = 'leave';
@@ -161,8 +160,7 @@ const handleMouseLeave = () => {
   isAnimating.value = true;
   
   // Kill any ongoing animations
-  gsap.killTweensOf(scale);
-  gsap.killTweensOf(rotation);
+  gsap.killTweensOf(transformValues);
   
   // Start videos immediately (same as hover)
   startVideos();
@@ -176,36 +174,29 @@ const handleMouseLeave = () => {
       // Check if there's a pending action to execute
       if (pendingAction.value === 'leave') {
         pendingAction.value = null;
-        handleMouseLeave();
+        deactivateAnimation();
       }
     }
   });
 
   // Step 1: Scale down and rotate back (reverse of hover animation)
-  tl.to(scale, {
-    value: 0.4, // Same as hover
+  // Animate transform values - GSAP will optimize with matrix3d via translate3d/scale3d
+  tl.to(transformValues, {
+    scale: 0.4, // Same as hover
+    rotationY: (-1 * (360 * 2)) - 60, // 2 full rotations in reverse direction
+    rotationZ: -10, // Opposite of hover
     duration: videoDuration.value / 2,
     ease: "power2.out" // Same easing as hover
-  })
+  }, 0)
   // Animate videos scale to follow cube
   .call(() => {
     animateVideosScale(0.5, videoDuration.value / 2);
   }, [], 0)
-  .to(rotation, {
-    y: (-1 * (360 * 2)) - 60, // 2 full rotations in reverse direction
-    z: -10, // Opposite of hover
-    duration: videoDuration.value / 2,
-    ease: "power2.out" // Same easing as hover
-  }, 0) // Start at the same time as scale
   // Step 2: Scale back to normal and rotate to initial position (0, 0)
-  .to(scale, {
-    value: 1,
-    duration: videoDuration.value / 2,
-    ease: "power2.out" // Same easing as hover
-  }, videoDuration.value / 2 - 0.2)
-  .to(rotation, {
-    z: 0,
-    y: 0, // Back to initial position
+  .to(transformValues, {
+    scale: 1,
+    rotationZ: 0,
+    rotationY: 0, // Back to initial position
     duration: videoDuration.value / 2,
     ease: "power2.out" // Same easing as hover
   }, videoDuration.value / 2 - 0.2)
@@ -228,18 +219,61 @@ const resetVideos = () => {
   }
 }
 
+// Initialize transform values and set up intersection observer
+onMounted(() => {
+  transformValues.scale = 1;
+  transformValues.rotationX = 0;
+  transformValues.rotationY = 0;
+  transformValues.rotationZ = 0;
+  
+  // Find the section parent (with id="talents")
+  const section = document.getElementById('talents');
+  if (!section) return;
+  
+  // Set up Intersection Observer to detect when section enters viewport
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          isSectionVisible.value = true;
+          
+          // If slide is active and hasn't animated yet, trigger animation
+          if (props.isActive && !hasAnimatedOnce.value) {
+            activateAnimation();
+          }
+        } else {
+          isSectionVisible.value = false;
+        }
+      });
+    },
+    {
+      threshold: 0.1, // Trigger when 10% of the section is visible
+      rootMargin: '0px'
+    }
+  );
+  
+  observer.observe(section);
+  
+  // Cleanup on unmount
+  onUnmounted(() => {
+    observer.disconnect();
+  });
+});
+
 watch(() => props.isActive, (newVal, oldVal) => {
   if(oldVal && !newVal) {
-    handleMouseLeave();
+    deactivateAnimation();
   } else if(!oldVal && newVal) {
-    handleHover();
+    // Only activate if section is visible OR if we've already animated once
+    if (isSectionVisible.value || hasAnimatedOnce.value) {
+      activateAnimation();
+    }
   }
 });
 
 // Cleanup GSAP animations on unmount
 onUnmounted(() => {
-  gsap.killTweensOf(scale);
-  gsap.killTweensOf(rotation);
+  gsap.killTweensOf(transformValues);
 });
 </script>
 
@@ -253,7 +287,7 @@ onUnmounted(() => {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate3d(-50%, -50%, 0);
   width: var(--cube-width);
   aspect-ratio: var(--cube-aspect-ratio);
   perspective: 2000px;
@@ -262,7 +296,6 @@ onUnmounted(() => {
   justify-content: center;
   will-change: transform;
   backface-visibility: hidden;
-  transform: translate(-50%, -50%) translateZ(0);
 }
 
 .cube {
@@ -272,7 +305,8 @@ onUnmounted(() => {
   transform-style: preserve-3d;
   will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0);
+  transform: translate3d(0, 0, 0);
+  transform-origin: center center;
 }
 
 .cube-face {
@@ -283,24 +317,24 @@ onUnmounted(() => {
   background-position: center;
   backface-visibility: hidden;
   will-change: transform;
-  transform: translateZ(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .front {
-  transform: translateZ(calc(var(--cube-width) / 2));
+  transform: translate3d(0, 0, calc(var(--cube-width) / 2));
 }
 
 .back {
-  transform: rotateY(180deg) translateZ(calc(var(--cube-width) / 2));
+  transform: rotateY(180deg) translate3d(0, 0, calc(var(--cube-width) / 2));
   background-color: #160F1B;
 }
 
 .right {
-  transform: rotateY(90deg) translateZ(calc(var(--cube-width) / 2));
+  transform: rotateY(90deg) translate3d(0, 0, calc(var(--cube-width) / 2));
 }
 
 .left {
-  transform: rotateY(-90deg) translateZ(calc(var(--cube-width) / 2));
+  transform: rotateY(-90deg) translate3d(0, 0, calc(var(--cube-width) / 2));
   background-color: #160F1B;
 }
 
@@ -318,7 +352,7 @@ video {
   max-width: unset;
   will-change: transform, scale;
   backface-visibility: hidden;
-  transform: translateZ(0);
+  transform: translate3d(0, 0, 0);
   contain: layout style paint;
 }
 </style> 

@@ -2,15 +2,16 @@ type Slide = {
   id: number;
   content: string;
   imageUrl: string;
+  backgroundUrl: string;
   name: string;
 }
 
 const slidesData: Slide[] = [
-  { id: 1, content: 'Slide 1', imageUrl: 'https://picsum.photos/seed/picsum1/300/400', name: 'Polynette' },
-  { id: 1, content: 'Slide 1', imageUrl: 'https://picsum.photos/seed/picsum1/300/400', name: 'Fana' },
-  { id: 1, content: 'Slide 1', imageUrl: 'https://picsum.photos/seed/picsum1/300/400', name: 'Yao_ag' },
-  { id: 1, content: 'Slide 1', imageUrl: 'https://picsum.photos/seed/picsum1/300/400', name: 'MarwanMC9' },
-  { id: 1, content: 'Slide 1', imageUrl: 'https://picsum.photos/seed/picsum1/300/400', name: `Lola 'Evileye'` },
+  { id: 1, content: 'Slide 1', imageUrl: '/images/talents/polynette-1.png', backgroundUrl: '/images/talents/polynette-2.png', name: 'Polynette' },
+  { id: 1, content: 'Slide 1', imageUrl: '/images/talents/fana-1.png', backgroundUrl: '/images/talents/fana-2.png', name: 'Fana' },
+  { id: 1, content: 'Slide 1', imageUrl: '/images/talents/yao-1.jpg', backgroundUrl: '/images/talents/yao-2.jpg', name: 'Yao_ag' },
+  { id: 1, content: 'Slide 1', imageUrl: '/images/talents/marwan-1.jpg', backgroundUrl: '/images/talents/marwan-2.jpg', name: 'MarwanMC9' },
+  { id: 1, content: 'Slide 1', imageUrl: '/images/talents/lola-1.jpg', backgroundUrl: '/images/talents/lola-2.jpg', name: `Lola 'Evileye'` },
 ];
 
 export { slidesData, type Slide };

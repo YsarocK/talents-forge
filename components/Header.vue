@@ -221,7 +221,7 @@ onMounted(() => {
   width: 28px;
   height: 2px;
   background-color: var(--color-primary-beige);
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   display: block;
 }
 </style>

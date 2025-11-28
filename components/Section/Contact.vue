@@ -1,5 +1,5 @@
 <template>
-  <section class="relative" id="contact">
+  <section ref="sectionRef" class="relative" id="contact">
     <div class="top-0 left-0 w-full h-full grid auto-rows-fr md:grid-rows-2 grid-cols-1 md:grid-cols-[var(--main-grid-columns)] bg-[#110d0e]">
       <div class="col-span-1 row-span-2 relative overflow-hidden">
         <div class="contact-background z-0 absolute top-0 left-[-30%] w-[250%] h-[60%]"></div>
@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="col-span-4 row-span-2 bg-primary-black relative">
-        <video src="/videos/contact/background.webm" preload="auto" autoplay muted playsinline loop class="absolute top-0 left-0 w-full h-full object-cover" />
+        <video ref="backgroundVideo" src="/videos/contact/background.webm" preload="auto" muted playsinline class="absolute top-0 left-0 w-full h-full object-cover" />
       </div>
     </div>
   </section>
@@ -59,6 +59,9 @@
 
 <script setup lang="ts">
 const { formEndpoint } = useRuntimeConfig().public;
+
+const sectionRef = ref<HTMLElement | null>(null)
+const backgroundVideo = ref<HTMLVideoElement | null>(null)
 
 const handleSubmit = async (event: Event) => {
   const form = event.target as HTMLFormElement;
@@ -76,6 +79,33 @@ const handleSubmit = async (event: Event) => {
     console.error('Failed to submit form');
   }
 }
+
+onMounted(() => {
+  if (!sectionRef.value || !backgroundVideo.value) return
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && backgroundVideo.value) {
+          backgroundVideo.value.play().catch(() => {
+            // Handle autoplay restrictions
+          })
+        } else if (backgroundVideo.value) {
+          backgroundVideo.value.pause()
+        }
+      })
+    },
+    {
+      threshold: 0.4 // 40% visible
+    }
+  )
+
+  observer.observe(sectionRef.value)
+
+  onUnmounted(() => {
+    observer.disconnect()
+  })
+})
 </script>
 
 <style lang="pcss" scoped>

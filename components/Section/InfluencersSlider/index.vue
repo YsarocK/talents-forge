@@ -2,13 +2,13 @@
   <section class="flex flex-col justify-between" id="talents">
     <Marquee />
 
-    <div class="relative py-16">
+    <div class="relative">
       <video src="/videos/sliders/sparkles.webm" preload="auto" autoplay muted playsinline loop class="absolute top-0 left-0 w-full h-full object-cover" />
       
-      <nav class="absolute inset-0 m-auto top-1/2 -translate-y-1/2 z-10 flex gap-82 w-fit">
+      <nav class="absolute inset-0 m-auto top-1/2 -translate-y-1/2 z-10 flex gap-82 w-fit pointer-events-none">
         <button
           @click="goToPrevious"
-          class="cursor-pointer"
+          class="cursor-pointer pointer-events-auto"
           aria-label="Previous slide"
         >
           <video src="/videos/arrow.webm" preload="auto" autoplay muted playsinline loop class="w-20 h-20 rotate-180" />
@@ -16,7 +16,7 @@
         
         <button
           @click="goToNext"
-          class="cursor-pointer"
+          class="cursor-pointer pointer-events-auto"
           aria-label="Next slide"
         >
           <video src="/videos/arrow.webm" preload="auto" autoplay muted playsinline loop class="w-20 h-20" />

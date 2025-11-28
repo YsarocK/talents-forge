@@ -1,7 +1,7 @@
 <template>
-  <section class="h-screen relative" id="partners">
-    <video src="/videos/partners/background.webm" preload="auto" autoplay muted playsinline class="absolute top-0 left-0 w-full h-full object-cover" />
-    <div class="absolute left-0 right-0 bottom-20 flex items-center justify-center">
+  <section ref="sectionRef" class="h-[90dvh] relative" id="partners">
+    <video ref="backgroundVideo" src="/videos/partners/background.webm" preload="auto" muted playsinline class="absolute top-0 left-0 w-full h-full object-cover" />
+    <div ref="swiperContainer" class="absolute left-0 right-0 bottom-20 flex items-center justify-center opacity-0">
       <swiper
         :modules="[Autoplay]"
         :slides-per-view="2"
@@ -41,7 +41,97 @@
 <script setup>
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay } from 'swiper/modules'
+import { gsap } from 'gsap'
 import 'swiper/css'
+
+const sectionRef = ref(null)
+const backgroundVideo = ref(null)
+const swiperContainer = ref(null)
+
+const setupVideoFadeIn = () => {
+  if (!backgroundVideo.value || !swiperContainer.value) return
+
+  const video = backgroundVideo.value
+  let hasTriggered = false
+  
+  const handleLoadedMetadata = () => {
+    if (hasTriggered) return
+    
+    const duration = video.duration
+    if (!duration || isNaN(duration)) return
+    
+    const fadeInTime = duration - 3.5 // 3.5 secondes avant la fin
+    
+    // Fonction pour déclencher le fade-in
+    const triggerFadeIn = () => {
+      if (hasTriggered || !swiperContainer.value) return
+      hasTriggered = true
+      
+      gsap.to(swiperContainer.value, {
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.out'
+      })
+    }
+    
+    // Écouter le timeupdate pour déclencher au bon moment
+    const handleTimeUpdate = () => {
+      if (hasTriggered) {
+        video.removeEventListener('timeupdate', handleTimeUpdate)
+        return
+      }
+      
+      // Vérifier si on est dans la dernière seconde (en tenant compte de la boucle)
+      const currentTime = video.currentTime
+      if (currentTime >= fadeInTime && currentTime < duration) {
+        triggerFadeIn()
+      }
+    }
+    
+    video.addEventListener('timeupdate', handleTimeUpdate)
+    
+    // Si la vidéo est déjà en cours de lecture et qu'on a dépassé le moment
+    if (video.currentTime >= fadeInTime && video.currentTime < duration) {
+      triggerFadeIn()
+    }
+  }
+  
+  if (video.readyState >= 1) {
+    // Les métadonnées sont déjà chargées
+    handleLoadedMetadata()
+  } else {
+    video.addEventListener('loadedmetadata', handleLoadedMetadata, { once: true })
+  }
+}
+
+onMounted(() => {
+  if (!sectionRef.value || !backgroundVideo.value) return
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && backgroundVideo.value) {
+          backgroundVideo.value.play().catch(() => {
+            // Handle autoplay restrictions
+          })
+          // Configurer le fade-in une fois que la vidéo est visible
+          setupVideoFadeIn()
+        } else if (backgroundVideo.value) {
+          backgroundVideo.value.pause()
+        }
+      })
+    },
+    {
+      threshold: 0.4 // 40% visible
+    }
+  )
+
+  observer.observe(sectionRef.value)
+
+  onUnmounted(() => {
+    observer.disconnect()
+  })
+})
 </script>
 
 <style scoped>
