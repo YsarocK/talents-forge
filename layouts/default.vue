@@ -24,7 +24,11 @@ main {
 useHead({
   title: 'Talent\'s Forge',
   meta: [
-    { name: 'description', content: 'Le Talent ça se Forge' }
+    { 
+      name: 'description', 
+      content: 'Forgez des talents, des idées et des collaborations uniques. Talent\'s Forge connecte les talents pour créer des projets exceptionnels.' 
+    },
+    { name: 'keywords', content: 'talents, influenceurs, collaborations, créateurs, agence, marketing, communication' }
   ]
 })
 </script>
