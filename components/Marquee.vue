@@ -1,7 +1,15 @@
+<script setup lang="ts">
+type Props = {
+  text: string;
+}
+
+defineProps<Props>();
+</script>
+
 <template>
   <div class="marquee-container text-primary-beige py-10">
-    <div class="marquee text-2xl font-bold">
-      <span v-for="i in 20" :key="i">DÉCOUVREZ NOS TALENTS -&nbsp;</span>
+    <div class="marquee text-2xl font-bold uppercase">
+      <span v-for="i in 20" :key="i">{{ text }} -&nbsp;</span>
     </div>
   </div>
 </template>
@@ -20,7 +28,7 @@
 
 .marquee {
   display: inline-flex;
-  animation: marquee 20s linear infinite;
+  animation: marquee 60s linear infinite;
   white-space: nowrap;
 }
 

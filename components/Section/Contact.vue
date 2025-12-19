@@ -6,7 +6,7 @@
         <div class="relative px-10 py-6 top-0 left-0 w-full flex flex-col gap-8">
           <img src="/images/logo/complex_light.svg" alt="Le Talent ça se forge" class="w-24 aspect-square" />
           <p class="text-primary-beige text-5xl font-bold uppercase">Contactez nous <span class="text-primary-red">aujourd'hui</span></p>
-          <ul class="max-w-[80%] flex flex-col gap-8">
+          <!-- <ul class="max-w-[80%] flex flex-col gap-8">
             <li class="flex items-center pb-2 text-primary-beige border-b border-primary-beige/20">
                <video src="/videos/contact/flamme.webm" preload="auto" autoplay muted playsinline loop class="w-20 z-[10]" />
               <div class="flex flex-col gap-0.5 -ml-5">
@@ -28,7 +28,7 @@
                 <p class="font-poppins text-xs">+33 0 00 00 00 00</p>
               </div>
             </li>
-          </ul>
+          </ul> -->
           <div class="flex flex-col gap-2 text-primary-beige">
             <div class="flex items-center pb-2  ">
               <video src="/videos/contact/flamme.webm" preload="auto" autoplay muted playsinline loop class="w-20 z-[10]" />
@@ -38,12 +38,12 @@
             </div>
             <form name="contact-form" @submit.prevent="handleSubmit" class="flex flex-col gap-2">
               <div class="grid grid-cols-2 border text-lg border-primary-beige/20 rounded-2xl">
-                <input type="text" name="last_name" required placeholder="Nom :" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20 border-r">
-                <input type="text" name="first_name" required placeholder="Prénom :" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20">
-                <input type="email" name="email" required placeholder="Email :" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20 border-r">
-                <input type="tel" name="phone" required placeholder="Téléphone :" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20">
-                <input type="text" name="object" required placeholder="Objet :" class="outline-none px-3 py-1 bg-transparent col-span-2 border-b border-primary-beige/20">
-                <textarea name="message" required placeholder="Message :" class="outline-none col-span-2 px-3 py-1 bg-transparent"></textarea>
+                <input type="text" name="last_name" required placeholder="Nom" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20 border-r">
+                <input type="text" name="first_name" required placeholder="Prénom" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20">
+                <input type="email" name="email" required placeholder="Email" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20 border-r">
+                <input type="tel" name="phone" required placeholder="Téléphone" class="outline-none px-3 py-1 bg-transparent border-b border-primary-beige/20">
+                <input type="text" name="object" required placeholder="Objet" class="outline-none px-3 py-1 bg-transparent col-span-2 border-b border-primary-beige/20">
+                <textarea name="message" required placeholder="Message" class="min-h-36 outline-none col-span-2 px-3 py-1 bg-transparent"></textarea>
               </div>
               <button type="submit" class="col-span-2 w-fit px-10 py-1 bg-primary-red text-primary-beige rounded-2xl">Envoyer</button>
             </form>

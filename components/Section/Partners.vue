@@ -24,11 +24,11 @@
         }"
         class="w-full partners-swiper"
       >
-        <swiper-slide v-for="i in 6" :key="i">
+        <swiper-slide v-for="partner in partners" :key="partner.id">
           <div class="flex items-center justify-center h-full">
             <img 
-              :src="`/images/partners/${i}.svg`" 
-              :alt="`Partner ${i}`"
+              :src="partner.image" 
+              :alt="`${partner.name} logo`"
               class="object-contain filter brightness-0 invert opacity-80 hover:opacity-100 transition-opacity duration-300"
             />
           </div>
@@ -43,6 +43,39 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay } from 'swiper/modules'
 import { gsap } from 'gsap'
 import 'swiper/css'
+
+const partners = [
+  {
+    id: 1,
+    name: 'Conforama',
+    image: '/images/partners/1.svg'
+  },
+  {
+    id: 2,
+    name: 'Cdiscount',
+    image: '/images/partners/2.svg'
+  },
+  {
+    id: 3,
+    name: 'Kqueo',
+    image: '/images/partners/3.svg'
+  },
+  {
+    id: 4,
+    name: 'Mairie Arcachon',
+    image: '/images/partners/4.svg'
+  },
+  {
+    id: 5,
+    name: 'Samsung',
+    image: '/images/partners/5.svg'
+  },
+  {
+    id: 6,
+    name: 'Holy',
+    image: '/images/partners/6.png'
+  },
+]
 
 const sectionRef = ref(null)
 const backgroundVideo = ref(null)
@@ -116,6 +149,8 @@ onMounted(() => {
           })
           // Configurer le fade-in une fois que la vidéo est visible
           setupVideoFadeIn()
+          // Démonter l'observer une fois qu'il a déclenché la lecture
+          observer.disconnect()
         } else if (backgroundVideo.value) {
           backgroundVideo.value.pause()
         }

@@ -1,6 +1,6 @@
 <template>
-  <header class="py-3 px-4 md:px-20 flex justify-between items-center bg-primary-black border-b border-primary-beige relative z-50">
-    <h1 class="text-primary-beige font-bold text-lg md:text-2xl">Le TALENT ça se FORGE</h1>
+  <header class="py-1 px-4 md:px-20 flex justify-between items-center bg-primary-black border-b border-primary-beige relative z-50">
+    <img src="/images/logo/colored-horizontal.svg" alt="Le Talent ça se forge" class="size-20" />
     
     <!-- Desktop Navigation -->
     <nav class="hidden md:flex items-center gap-12">
@@ -9,7 +9,6 @@
           <NavLink :to="link.to" :label="link.label" />
         </li>
       </ul>
-      <img src="/images/logo/simple_light.svg" alt="Le Talent ça se forge" class="w-10 h-10" />
     </nav>
 
     <!-- Mobile Burger Button -->
@@ -41,7 +40,7 @@
             />
           </li>
         </ul>
-        <img src="/images/logo/simple_light.svg" alt="Le Talent ça se forge" class="w-16 h-16 mt-8 menu-item" />
+        <img src="/images/logo/colored-horizontal.svg" alt="Le Talent ça se forge" class="size-20 mt-8 menu-item" />
       </nav>
     </div>
   </header>

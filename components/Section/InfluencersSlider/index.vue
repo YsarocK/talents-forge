@@ -1,6 +1,6 @@
 <template>
   <section class="flex flex-col justify-between" id="talents">
-    <Marquee />
+    <Marquee text="DÉCOUVREZ NOS TALENTS EXCLUSIFS" />
 
     <div class="relative">
       <video src="/videos/sliders/sparkles.webm" preload="auto" autoplay muted playsinline loop class="absolute top-0 left-0 w-full h-full object-cover" />
@@ -26,14 +26,14 @@
       <div class="swiper-container" id="influencers-slider-container">
         <div class="swiper influencers-swiper">
           <div class="swiper-wrapper">
-            <SectionInfluencersSliderItem class="swiper-slide" v-for="(slide, index) in slidesData" :key="slide.id" :data="slide" :is-active="activeSlideIndex === index"/>
+            <SectionInfluencersSliderItem class="swiper-slide" v-for="(slide, index) in duplicatedSlides" :key="`${slide.id}-${index}`" :data="slide" :is-active="activeSlideIndex === (index % slidesData.length)"/>
           </div>
         </div>
         
       </div>
     </div>
 
-    <Marquee />
+    <Marquee text="Des alliances qui forgent la différence" />
   </section>
 </template>
 
@@ -44,6 +44,11 @@ import { slidesData } from './data';
 
 const swiper = ref<Swiper | null>(null);
 const activeSlideIndex = ref(0);
+
+// Duplicate slides to ensure smooth loop with few slides
+const duplicatedSlides = computed(() => {
+  return [...slidesData, ...slidesData];
+});
 
 onMounted(() => {
   swiper.value = new Swiper('.influencers-swiper', {
@@ -57,26 +62,23 @@ onMounted(() => {
     allowTouchMove: false,
     simulateTouch: false,
     breakpoints: {
-      768: {
-        slidesPerView: 1.2,
-      },
       1024: {
-        slidesPerView: 2.2,
-      },
-      1280: {
         slidesPerView: 3.2,
+      },
+      1800: {
+        slidesPerView: 5.2,
       },
     },
     on: {
       slideChange: (swiper) => {
-        activeSlideIndex.value = swiper.realIndex;
+        activeSlideIndex.value = swiper.realIndex % slidesData.length;
       },
     },
   });
 
   // Initialize the active slide index
   if (swiper.value) {
-    activeSlideIndex.value = swiper.value.realIndex;
+    activeSlideIndex.value = swiper.value.realIndex % slidesData.length;
   }
 });
 
